@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+  </PropertyGroup>
+
+	<PropertyGroup>
+		<PackageId>clojure.tools.deps.edn</PackageId>
+		<RootNamespace>clojure.tools.deps</RootNamespace>
+		<Title>clojure.tools.deps.edn</Title>
+		<Product>clojure.tools.deps.edn</Product>
+		<AssemblyTitle>clojure.tools.deps.edn</AssemblyTitle>
+		<Authors>David Miller</Authors>
+		<Description>Port of the tools.deps.edn library to ClojureCLR</Description>
+		<Copyright>Copyright © Rich Hickey, Alex Miller, ClojureCLR contributors</Copyright>
+		<PackageLicenseExpression>EPL-1.0</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/clojure/clr.tools.deps.edn</RepositoryUrl>
+		<Company>ClojureCLR contributors</Company>
+		<PackageTags>Clojure;ClojureCLR</PackageTags>
+		<Version>0.9.48</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource CopyToOutputDirectory="Never" Include="..\..\clojure\clojure\tools\deps\**\*" />
+	</ItemGroup>
+
+
+</Project>

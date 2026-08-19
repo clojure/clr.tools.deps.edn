@@ -3,7 +3,7 @@ clr.tools.deps.edn
 
 A port to ClojureCLR of the [`tools.deps.edn`](https://github.com/clojure/tools.deps.edn) library.
 
-From that repository's READM:
+From that repository's README:
 
 > Rationale:
 >

@@ -28,7 +28,7 @@
 ;;;; Read
 
 (defonce ^:private nl 
-  #?(:clj #(System/getProperty "line.separator")
+  #?(:clj  #(System/getProperty "line.separator")
      :cljr #(Environment/NewLine)))
 
 (defn- printerrln

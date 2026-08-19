@@ -1,17 +1,17 @@
 (ns clojure.tools.deps.edn-test
   (:require
     [clojure.test :refer :all]
-    [clojure.tools.deps.edn :as depsedn])
+    [clojure.tools.deps.edn :as deps-edn])
   (:import
     #?(:clj [java.io File]
 	   :cljr [System.IO FileInfo DirectoryInfo])))
 
 (deftest test-read-deps-on-nonexistent-file
-  (is (nil? (depsedn/read-deps (#?(:clj File. :cljr FileInfo.) "NONEXISTENT_FILE")))))
+  (is (nil? (deps-edn/read-deps (#?(:clj File. :cljr FileInfo.) "NONEXISTENT_FILE")))))
 
 (deftest test-merge-or-replace
   (are [vals ret]
-    (= ret (apply #'depsedn/merge-or-replace vals))
+    (= ret (apply #'deps-edn/merge-or-replace vals))
 
     [nil nil] nil
     [nil {:a 1}] {:a 1}
@@ -22,7 +22,7 @@
     [1 2] 2))
 
 (deftest test-merge-edns
-  (is (= (depsedn/merge-edns
+  (is (= (deps-edn/merge-edns
            [{:deps {'a {:v 1}, 'b {:v 1}}
              :a/x {:a 1}
              :a/y "abc"}
@@ -36,7 +36,7 @@
 
 (deftest merge-alias-maps
   (are [m1 m2 out]
-    (= out (#'depsedn/merge-alias-maps m1 m2))
+    (= out (#'deps-edn/merge-alias-maps m1 m2))
 
     {} {} {}
     {} {:extra-deps {:a 1}} {:extra-deps {:a 1}}

@@ -23,18 +23,16 @@ Latest release: 0.9.48
 [deps.edn](https://clojure.org/reference/deps_edn) dependency information:
 
 ```
-XXXXX  org.clojure/tools.deps.edn {:mvn/version "0.9.48"}
+io.github.clojure/clr.tools.deps.edn {:git/tag "v0.9.48" :git/sha "425bb0b"}
 ```
 
-[Leiningen](https://github.com/technomancy/leiningen/) dependency information:
-
-```
-XXXX [org.clojure/tools.deps.edn "0.9.48"]
-```
 
 NuGet dependency information:
 
 
+```
+Install-Package clojure.tools.deps.edn  -Version 0.9.48
+```
 
 # Copyright and License
 

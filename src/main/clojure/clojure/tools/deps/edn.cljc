@@ -196,35 +196,44 @@
 #?(
 :clj
 
-(defn user-deps-path
-  "Use the same logic as clj to calculate the location of the user deps.edn.
-  Note that it's possible no file may exist at this location."
+(defn user-config-dir
+  "Use the same logic as clj to calculate the location of the user config dir.
+  Note that it's possible no dir may exist at this location.
+  Return path as string."
   []
   (let [config-env (get-env-var "CLJ_CONFIG")
         xdg-env (get-env-var "XDG_CONFIG_HOME")
-        home (get-user-home)
-        config-dir (cond config-env config-env
-                         xdg-env (str xdg-env directory-separator "clojure")
-                         :else (str home directory-separator ".clojure"))]
-    (str config-dir directory-separator "deps.edn")))
-
+        home (get-user-home)]
+    (cond config-env config-env
+          xdg-env (str xdg-env directory-separator "clojure")
+         :else (str home directory-separator ".clojure"))))
+    
 :cljr
 
-(defn user-deps-path
-  "Use the same logic as clj to calculate the location of the user deps.edn.
-  Note that it's possible no file may exist at this location."
+(defn user-config-dir
+  "Use the same logic as clj to calculate the location of the user config dir.
+  Note that it's possible no dir may exist at this location.
+  Return path as string."
   ([] 
-    (user-deps-path "deps-clr.edn"))
+    (user-config-dir "deps-clr.edn"))
   ([filename]
     (let [config-env (get-env-var "CLJ_CONFIG")
           xdg-env (get-env-var "XDG_CONFIG_HOME")
-          home (get-user-home)
-          config-dir (cond config-env config-env
-                           xdg-env (str xdg-env directory-separator "clojure")
-                           :else (str home directory-separator ".clojure"))]
-      (str config-dir directory-separator filename))))
+          home (get-user-home)]
+    (cond config-env config-env
+          xdg-env (str xdg-env directory-separator "clojure")
+         :else (str home directory-separator ".clojure")))))
 
 )
+
+
+
+(defn user-deps-path
+  "Use the same logic as clj to calculate the location of the user deps.edn.
+  Note that it's possible no file may exist at this location.
+  Returns path as string."
+  []
+  (str (user-config-dir) directory-separator "deps.edn"))
 
 #?(
 

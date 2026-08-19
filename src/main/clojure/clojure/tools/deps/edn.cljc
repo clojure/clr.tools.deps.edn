@@ -61,7 +61,7 @@
 )	
 	
 
-(defn- read-edn
+(defn read-edn
   "Read edn from Reader r, which should contain exactly one edn value.
   If source exists but is blank, nil is returned.
   Throws if source is unreadable or contains multiple values.
@@ -265,14 +265,20 @@
 :clj
 
 (defn project-deps
-  "Calculate the project deps.edn location "
+  "Calculate the project deps.edn location, read and return the deps.edn data.
+
+  You may use clojure.tools.deps.util.dir/with-dir to read from a custom project
+  dir, either absolute or relative to the current dir context."
   []
   (-> (project-deps-path) jio/file dir/canonicalize read-deps))
 
 :cljr
 
 (defn project-deps
-  "Calculate the project deps.edn location "
+  "Calculate the project deps.edn location, read and return the deps.edn data.
+
+  You may use clojure.tools.deps.util.dir/with-dir to read from a custom project
+  dir, either absolute or relative to the current dir context."
   []
   (or (-> (project-deps-path) dir/canonicalize read-deps)
       (-> (project-deps-path) dir/canonicalize read-deps)))
@@ -291,7 +297,7 @@
   "Takes optional map of location sources, keys = :root :user :project :extra
   where each key may be:
     :standard (default) - to get the default source
-    string - for file path to source
+    string - for file path to source, relative to current dir context
     nil - to omit
     map - a literal map to use
 

@@ -169,7 +169,6 @@
   clojure/tools/deps/deps.edn"
   []
   (let [url (jio/resource "clojure/tools/deps/deps.edn")]
-    ;; TODO: separate file reading and resource reading  
     (read-edn (BufferedReader. (InputStreamReader. (.openStream url))))))
 	
 :cljr
@@ -177,7 +176,7 @@
   "Read the root deps.edn resource from the classpath at the path
   clojure/tools/deps/deps.edn"
   []
-  (let [url "clojure/tools/deps/deps.edn"]             ;;; We may need to know the install-dir
+  (let [url "clojure/tools/deps/deps.edn"]
     (read-edn (.OpenText (cio/file-info @install-dir url)))))
 )
 

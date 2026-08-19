@@ -200,7 +200,7 @@
   "Use the same logic as clj to calculate the location of the user config dir.
   Note that it's possible no dir may exist at this location.
   Return path as string."
-  []
+  ^String []
   (let [config-env (get-env-var "CLJ_CONFIG")
         xdg-env (get-env-var "XDG_CONFIG_HOME")
         home (get-user-home)]
@@ -214,9 +214,9 @@
   "Use the same logic as clj to calculate the location of the user config dir.
   Note that it's possible no dir may exist at this location.
   Return path as string."
-  ([] 
+  (^String [] 
     (user-config-dir "deps-clr.edn"))
-  ([filename]
+  (^String [filename]
     (let [config-env (get-env-var "CLJ_CONFIG")
           xdg-env (get-env-var "XDG_CONFIG_HOME")
           home (get-user-home)]
@@ -256,6 +256,14 @@
 
 )
 
+(defn project-dir
+  "Calculate the project directory, usually . by default, but
+  may be pushed to a new directory using the
+  clojure.tools.deps.util.dir API."
+  ^String []
+  (#?(:clj  .getPath :cljr .FullName) dir/*the-dir*))
+
+
 (def directory-separator 
   #?(:clj File/separator
      :cljr Path/DirectorySeparatorChar))
@@ -266,8 +274,8 @@
   clojure.tools.deps.util.dir/*the-dir* - use with-dir
   to push a new local directory context around a call to
   project-deps-path."
-  []
-  (str dir/*the-dir* directory-separator "deps.edn"))
+  ^String []
+  (str (project-dir) directory-separator "deps.edn"))
 
 #?(
 

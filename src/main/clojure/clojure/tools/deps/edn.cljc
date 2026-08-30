@@ -157,9 +157,26 @@
 ;;;; Dep chain lookups
 
 
+#?(
+:cljr
+
+(defn lookup-install-dir
+  "Lookup the installation directory for looking up root deps.edn.
+   Sources of truth:
+     1. Environment variable clojure.cli.install_dir
+     2. System.AppContext/BaseDirectory"
+  []
+  (let [env-install-dir (Environment/GetEnvironmentVariable "clojure.cli.install_dir")
+        appcontext-install-dir System.AppContext/BaseDirectory]
+    (cond
+      (not (String/IsNullOrWhiteSpace env-install-dir)) env-install-dir
+      :else appcontext-install-dir)))
+)
+
+
 ;; This is needed to pass in the installation directory for looking up root 
-;; Initialized in 
-(def install-dir (atom nil))
+
+(def install-dir (atom #?(:clj nil :cljr (lookup-install-dir))))
 
 
 #?(

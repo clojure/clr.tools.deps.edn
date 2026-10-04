@@ -179,6 +179,28 @@
 (def install-dir (atom #?(:clj nil :cljr (lookup-install-dir))))
 
 
+;; I was having trouble with locating the resource clojure/tools/deps/deps.edn depending on how this library was delivered,
+;; so I decided to embed the file contents here.
+
+#?(
+
+:cljr
+
+(def ^:private root-deps-map
+  `{
+     :paths ["src"]
+     :deps { }
+     :aliases 
+	 {
+       :deps {:replace-paths []
+              :replace-deps {io.github.clojure/clr.tools.deps.cli {:git/tag "v0.1.6" :git/sha "e8e5491"}}
+              :ns-default clojure.tools.deps.cli.api
+              :ns-aliases {help clojure.tools.deps.cli.help}}
+        :test {:extra-paths ["test"]}
+     }
+    })  ; contents of the CLR root deps.edn
+)
+
 #?(
 :clj 
 (defn root-deps
@@ -189,12 +211,18 @@
     (read-edn (BufferedReader. (InputStreamReader. (.openStream url))))))
 	
 :cljr
+;;;(defn root-deps
+;;;  "Read the root deps.edn resource from the classpath at the path
+;;;  clojure/tools/deps/deps.edn"
+;;;  []
+;;;  (let [url "clojure/tools/deps/deps.edn"]
+;;;    (read-edn (.OpenText (cio/file-info @install-dir url)))))
+
 (defn root-deps
-  "Read the root deps.edn resource from the classpath at the path
-  clojure/tools/deps/deps.edn"
+  "Return the root deps.edn map: the built-in defaults that sit
+  beneath the user and project deps.edn files."
   []
-  (let [url "clojure/tools/deps/deps.edn"]
-    (read-edn (.OpenText (cio/file-info @install-dir url)))))
+  root-deps-map)
 )
 
 

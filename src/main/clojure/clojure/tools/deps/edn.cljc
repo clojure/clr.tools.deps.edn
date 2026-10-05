@@ -193,7 +193,7 @@
      :aliases 
 	 {
        :deps {:replace-paths []
-              :replace-deps {io.github.clojure/clr.tools.deps.cli {:git/tag "v0.1.6" :git/sha "e8e5491"}}
+              :replace-deps {io.github.clojure/clr.tools.deps.cli {:git/tag "v0.31.160" :git/sha "b064b2c"}}
               :ns-default clojure.tools.deps.cli.api
               :ns-aliases {help clojure.tools.deps.cli.help}}
         :test {:extra-paths ["test"]}

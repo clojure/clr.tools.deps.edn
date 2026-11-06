@@ -17,7 +17,7 @@
 		<RepositoryUrl>https://github.com/clojure/clr.tools.deps.edn</RepositoryUrl>
 		<Company>ClojureCLR contributors</Company>
 		<PackageTags>Clojure;ClojureCLR</PackageTags>
-		<Version>0.9.49</Version>
+		<Version>0.9.50</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

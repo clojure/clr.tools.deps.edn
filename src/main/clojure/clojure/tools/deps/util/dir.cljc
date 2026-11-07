@@ -31,6 +31,57 @@
   #?(:clj (jio/file (System/getProperty "user.dir"))
      :cljr (cio/dir-info Environment/CurrentDirectory)))
 
+;; As convenient a place as any.  Needed in other places.
+
+#?(
+:cljr
+
+(compile-when (>= (:major dotnet-version) 5)
+
+(defn trim-ending-directory-separator [^String s]
+  (System.IO.Path/TrimEndingDirectorySeparator s))
+  
+) ;; compile-when
+)
+
+
+#?(
+:cljr
+
+(defn directory-separator-char? [c]
+ (or (= System.IO.Path/DirectorySeparatorChar c)
+	 (= System.IO.Path/AltDirectorySeparatorChar c)))
+)
+
+#?(
+:cljr
+
+(compile-when (< (:major dotnet-version) 5)
+
+
+
+(defn trim-ending-directory-separator [^String s]
+  (cond
+     (String/IsNullOrWhiteSpace s)  
+	 s
+     (= (System.IO.Path/GetPathRoot s) s) 
+	 s
+     (directory-separator-char? (last s)) 
+	 (String/.Substring s 0 (dec (String/.Length s)))
+	 :else 
+	 s))
+  
+) ;; compile-when
+)
+
+#?(
+:cljr
+
+(defn resolve-against [^String base ^String path]
+  (trim-ending-directory-separator (System.IO.Path/GetFullPath (System.IO.Path/Combine base path))))
+
+)
+
 #?
 (:clj
 (defn canonicalize
@@ -49,18 +100,32 @@
   f may be either absolute or relative."
   ^FileSystemInfo [f]
   (let [f (if (instance? FileSystemInfo f) (.FullName ^FileSystemInfo f) (str f))]
-    (if (Path/IsPathRooted f)
-       (cio/file-info f)
-	   (cio/file-info (Path/Join (.FullName *the-dir*) f)))))
+    (cio/file-info (resolve-against (.FullName *the-dir*) f))))
+
 )
+
+#?(
+:clj
 
 (defmacro with-dir
   "Push directory into current directory context for execution of body."
-  [^#?(:clj File  :cljr DirectoryInfo) dir & body]
+  [^File dir & body]
   `(binding [*the-dir* (canonicalize ~dir)]
      ~@body))
-#?
-(:clj
+
+
+:cljr
+
+(defmacro with-dir
+  "Push directory into current directory context for execution of body."
+  [^DirectoryInfo dir & body]
+  `(binding [*the-dir* (cio/dir-info (.FullName (canonicalize ~dir)))]
+     ~@body))
+	 
+)	 
+	 
+#?(
+:clj
 (defn- same-file?
   "If a file can't be read (most common reason is directory does not exist), then
   treat this as not the same file (ie unknown)."
@@ -95,11 +160,11 @@
 		  
 :cljr  ;; not sure yet if this is what is needed.  Need to see it in action.
 (defn sub-path?
-  [^FileInfo path]
+  [^FileSystemInfo path]
   (if (nil? path)
     false 
     (let [root-path *the-dir*]
-      (loop [check-path (.Directory path)]
+      (loop [check-path (cio/dir-info (.FullName path))]
 	    (cond 
 		  (nil? check-path) false
 		  (same-file? root-path check-path) true

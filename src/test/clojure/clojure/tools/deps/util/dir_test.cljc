@@ -9,10 +9,11 @@
 (ns clojure.tools.deps.util.dir-test
   (:require
     [clojure.tools.deps.util.dir :as dir]
-    [clojure.test :refer [deftest is]])
+    [clojure.test :refer [deftest is are]])               ;;; DM: Added 'are'
   (:import
     #?(:clj [java.io File]
 	   :cljr [System.IO FileInfo DirectoryInfo Path])))
+	   
 
 #?(
 :clj
@@ -29,6 +30,38 @@
     (binding [dir/*the-dir* base]
       (let [abs "/a/b"]
         (is (= (.FullName (FileInfo. abs)) (.FullName (dir/canonicalize abs))))
-        (is (= (.FullName (FileInfo. (Path/Combine (.FullName base) "xyz"))) (.FullName (dir/canonicalize "xyz"))))))))
+        (is (= (.FullName (FileInfo. (Path/Combine (.FullName base) "xyz"))) (.FullName (dir/canonicalize "xyz")))))
+	  (let [abs "/a/b/"]
+        (is (= (dir/trim-ending-directory-separator (.FullName (FileInfo. abs))) (.FullName (dir/canonicalize abs))))
+        (is (= false (dir/directory-separator-char? (last (.FullName (dir/canonicalize abs))))))
+        (is (= false (dir/directory-separator-char? (last (.FullName (dir/canonicalize "xyz")))))))
+	  (is (= (.FullName (dir/canonicalize "xyz")) (.FullName (dir/canonicalize "xyz/"))))
+	  (is (= (.FullName (dir/canonicalize "b//")) (.FullName (dir/canonicalize "b/"))))
+	  (is (= true (dir/directory-separator-char? (last (.FullName (dir/canonicalize "/")))))))))
+	  
+		
+)
+		
 
+
+#?( 
+
+:cljr
+
+(deftest test-subpath
+  (are [p v] (= v (dir/sub-path? (System.IO.FileInfo. p)))
+     "." true
+	 "src" true
+	 ".." false
+	 (Path/GetTempPath) false
+	 "./src/../." true))
+	 
+)
+
+#?(
+:cljr
+
+(deftest test-with-dir
+  (is (dir/with-dir "src" (instance? DirectoryInfo dir/*the-dir*))))
+  
 )

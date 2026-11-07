@@ -125,6 +125,31 @@
 )	 
 	 
 #?(
+:cljr
+
+(compile-when (>= (:major dotnet-version) 5)
+
+(defn- windows? []
+  (System.OperatingSystem/IsWindows))
+
+) ;; compile-when
+)
+
+#?(
+:cljr
+
+(compile-when (< (:major dotnet-version) 5)
+
+(defn- windows? []
+  (System.Runtime.InteropServices.RuntimeInformation/IsOSPlatform System.Runtime.InteropServices.OSPlatform/Windows))
+
+) ;; compile-when
+)
+
+  
+	 
+	 
+#?(
 :clj
 (defn- same-file?
   "If a file can't be read (most common reason is directory does not exist), then
@@ -137,7 +162,9 @@
 :cljr
 (defn- same-file?
   [^FileSystemInfo p1 ^FileSystemInfo p2]
-  (= (.FullName p1) (.FullName p2)))
+  (if (windows?)
+    (String/Equals (.FullName p1) (.FullName p2) StringComparison/OrdinalIgnoreCase)
+	(= (.FullName p1) (.FullName p2))))
 )
 
 #?(

@@ -38,14 +38,9 @@
 	  (is (= (.FullName (dir/canonicalize "xyz")) (.FullName (dir/canonicalize "xyz/"))))
 	  (is (= (.FullName (dir/canonicalize "b//")) (.FullName (dir/canonicalize "b/"))))
 	  (is (= true (dir/directory-separator-char? (last (.FullName (dir/canonicalize "/")))))))))
-	  
-		
 )
-		
-
 
 #?( 
-
 :cljr
 
 (deftest test-subpath
@@ -56,7 +51,6 @@
 	 (Path/GetTempPath) false
 	 "./src/../." true)
    (is (dir/with-dir "src" (dir/sub-path? "main"))))
-	 
 )
 
 #?(
@@ -64,5 +58,13 @@
 
 (deftest test-with-dir
   (is (dir/with-dir "src" (instance? DirectoryInfo dir/*the-dir*))))
+)
+
+#?(
+:cljr
+
+(deftest same-file-respects-system-casing
+  ;; these should be equal on windows, not equal otherwise.
+  (is (= (#'dir/windows?) (#'dir/same-file? (DirectoryInfo. "C:/a/b") (DirectoryInfo. "C:/A/B")))))
   
 )

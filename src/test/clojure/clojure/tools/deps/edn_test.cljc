@@ -51,3 +51,19 @@
     {:jvm-opts ["-Xms100m" "-Xmx200m"]} {:jvm-opts ["-Dfoo=bar"]} {:jvm-opts ["-Xms100m" "-Xmx200m" "-Dfoo=bar"]}
     {} {:main-opts ["foo.bar" "1"]} {:main-opts ["foo.bar" "1"]}
     {:main-opts ["foo.bar" "1"]} {:main-opts ["foo.baz" "2"]} {:main-opts ["foo.baz" "2"]}))
+	
+#?(
+:cljr
+
+(deftest read-deps-throws-on-directory
+  (let [tempdir (System.IO.Path/Combine (System.IO.Path/GetTempPath) (.ToString (Guid/NewGuid) "N"))
+        tempfile (System.IO.Path/Combine tempdir "a.txt")]
+	(System.IO.Directory/CreateDirectory tempdir)
+	(try 
+      (let [ex (is (thrown-with-msg? ExceptionInfo #"path is a directory" (depsedn/read-deps tempdir)))] 
+	    (is (= tempdir (:path (ex-data ex)))))
+      (is (nil? (depsedn/read-deps tempfile)))
+	  (finally
+	     (System.IO.Directory/Delete tempdir true)))))
+
+)

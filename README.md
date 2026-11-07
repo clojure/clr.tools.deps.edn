@@ -17,13 +17,13 @@ Note that the `tools.deps` library has been ported for ClojureCLR; it can be fou
 
 # Release Information
 
-Latest release: 0.9.51
+Latest release: 0.9.52
 
 
 [deps.edn](https://clojure.org/reference/deps_edn) dependency information:
 
 ```
-io.github.clojure/clr.tools.deps.edn {:git/tag "v0.9.51" :git/sha "460c2e8"}
+io.github.clojure/clr.tools.deps.edn {:git/tag "v0.9.52" :git/sha "3ea11cc"}
 ```
 
 
@@ -31,7 +31,7 @@ NuGet dependency information:
 
 
 ```
-Install-Package clojure.tools.deps.edn  -Version 0.9.51
+Install-Package clojure.tools.deps.edn  -Version 0.9.52
 ```
 
 # Copyright and License

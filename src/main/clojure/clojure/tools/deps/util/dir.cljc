@@ -158,13 +158,19 @@
           (same-file? root-path check-path) true
           :else (recur (.getParent check-path)))))))
 		  
-:cljr  ;; not sure yet if this is what is needed.  Need to see it in action.
+:cljr  
+
+;; contrary to :clj above, we take either a string or FileSystemInfo.
+
 (defn sub-path?
-  [^FileSystemInfo path]
+  [path]
   (if (nil? path)
     false 
-    (let [root-path *the-dir*]
-      (loop [check-path (cio/dir-info (.FullName path))]
+    (let [path (if (instance? String path) 
+	             (canonicalize path)
+				 path)
+	      root-path *the-dir*]
+      (loop [check-path (cio/dir-info (.FullName ^FileSystemInfo path))]
 	    (cond 
 		  (nil? check-path) false
 		  (same-file? root-path check-path) true

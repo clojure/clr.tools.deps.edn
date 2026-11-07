@@ -54,7 +54,8 @@
 	 "src" true
 	 ".." false
 	 (Path/GetTempPath) false
-	 "./src/../." true))
+	 "./src/../." true)
+   (is (dir/with-dir "src" (dir/sub-path? "main"))))
 	 
 )
 
